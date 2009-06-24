@@ -1,6 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :articles
 
+  map.resources :articles
+
   map.resources :newsgroups
 
   # The priority is based upon order of creation: first created -> highest priority.

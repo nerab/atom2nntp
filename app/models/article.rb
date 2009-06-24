@@ -62,6 +62,11 @@ class Article < ActiveRecord::Base
     result
   end
   
+  # retrieves the next article within the thread. Assumes that ids are continuous
+  def next
+    self.root.children.reject{|sibling| sibling.date <= self.date}.sort{|a,b| a.date <=> b.date}.first
+  end
+ 
 private
   def bytes(str)
     size = 0

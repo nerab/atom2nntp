@@ -5,9 +5,10 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title>Articles: <%= controller.action_name %></title>
-  <%= stylesheet_link_tag 'scaffold' %>
+  <%= stylesheet_link_tag 'acunote-shortcuts' %>
+  <%= javascript_include_tag 'acunote-shortcuts' %>
 </head>
-<body>
+<body onload="shortcutListener.init();">
 
 <p style="color: green"><%= flash[:notice] %></p>
 

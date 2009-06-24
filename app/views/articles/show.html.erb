@@ -1,0 +1,31 @@
+<%
+unless nil == @article.next
+  @page_shortcuts = {
+    :n => "document.location = '#{article_path(@article.next)}';"
+}
+%>
+  <script type="text/javascript">
+    <%= render_shortcuts %>
+  </script>
+<%
+end
+%>
+
+<div class="message">
+<div class="headers">
+From: <%= h(@article.from) %><br>
+Subject: <%= link_to h(@article.subject), newsgroup_path(@article.newsgroup, :anchor => @article.id) %><br>
+Newsgroups: <%= link_to h(@article.newsgroup.title), newsgroup_path(@article.newsgroup, :anchor => 'articles') %><br>
+Date: <%= h(@article.date) %><br>
+<% unless @article.references.blank? %>
+References: <%= link_to h(@article.references), article_path(@article.references) %><br>
+<% end %>
+<% unless nil == @article.next %>
+Next: <%= link_to h(@article.next.subject), article_path(@article.next), :accesskey => 'n' %><br>
+<% end %>
+Original: <%= link_to "flickr", @article.link %><br>
+</div>
+<div class="body">
+<%= @article.body %>
+</div>
+</div>
