@@ -1,10 +1,7 @@
 require 'rubygems'
 
 #
-# Run this with SSL from home directory: sudo stunnel -d 563 -r 8119 -p ./news.familie-uhlig.net.pem
-#
 # TODO We need a sweeper that removes old articles, depending on size and update frequency of the group
-# TODO Implement cancel messages
 #
 class NntpSession
   def send_line(data, debug = false)
