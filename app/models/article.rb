@@ -25,7 +25,7 @@ class Article < ActiveRecord::Base
       article = ""
       article << "Message-ID: #{message_id}" << "\r\n"
       article << "Date: #{date.to_time.rfc822}" << "\r\n"
-      article << "From: #{from}" << " <rss2news@example.com>" << "\r\n"
+      article << "From: #{from}" << " <atom2nntp@example.com>" << "\r\n"
       article << "MIME-Version: 1.0" << "\r\n"
       article << "Newsgroups: #{newsgroup.title}" << "\r\n"
       article << "Subject: #{subject}" << "\r\n"
