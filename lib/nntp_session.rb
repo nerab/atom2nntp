@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'mechanize'
 
 #
 # Run this with SSL from home directory: sudo stunnel -d 563 -r 8119 -p ./news.familie-uhlig.net.pem
@@ -78,74 +77,12 @@ class NntpSession
             send_article_part(article, $1)
           end
         
-        when /^POST$/i         # Article posting
-          if !authenticated?
-            send_line("480 Permission denied", true) # require username and password
-          else
-            send_line('340 Send article to be posted', true)
-            @posting_mode = true
-          end
-          
-        when /^AUTHINFO\s+USER\s+(.+)$/i
-          log("- Received user name #{$1}")
-          
-          if !@password.nil?
-            send_line("482 Authentication commands issued out of sequence", true)
-          else
-            if $1.blank?
-              log("- Rejecting empty user name #{$1}")
-              send_line("481 Authentication failed/rejected", true)
-            else
-              @user = $1
-              send_line("381 Password required", true)
-            end
-          end
-          
-        when /^AUTHINFO\s+PASS\s+(.+)$/i
-          log("- Received password #{$1} for user name #{@user}")
-          
-          if @user.nil?
-            send_line("482 Authentication commands issued out of sequence", true)
-          else
-            if $1.blank?
-              log("- Rejecting empty password for user name #{@user}")
-              send_line("481 Authentication failed/rejected", true)
-            else
-              @password = $1
-              send_line("281 Authentication accepted", true)
-            end
-          end
-
         when /^QUIT$/i
           send_line("205 closing connection - goodbye!", true)
           close_connection
       
       else
-        if @posting_mode.nil? 
-          send_line("500 command not supported", true) # not in posting mode, command not understood
-        else
-          begin
-            article = RFC822Article.new(p_data.to_s)
-            log("- Now posting article: #{article.from}: #{article.subject} to flickr (credentials: #{@user}:#{@password})")
-            
-            # Post article to flickr. If successful, return OK, otherwise raise exception
-            # BUG The references header may contain more than a single message id, separated by spaces
-            if (!article.references.blank?)
-              post_reply(Article.find_by_message_id(article.references).link, article.body)
-            else
-              # TODO Add post_url to class Newsgroup
-              post_new(article.group.post_url, article.body)
-            end
-          
-            log("- Success")
-            send_line '240 Article received ok'
-          rescue
-            send_line '441 Posting failed'
-            log("- Error handling request: #{$!} (#{caller.join('\n')})")
-          ensure
-            @posting_mode = false # next data received will be treated as a regular NNTP command
-          end          
-        end
+        send_line("500 command not supported", true) 
       end
     rescue
       log("- Error handling request: #{$!} (#{caller.join('\n')})")
@@ -226,53 +163,5 @@ class NntpSession
   def log(data)
     puts "#{Time.now} - #{self.class.name} #{data.to_s}"
     $stdout.flush    
-  end
-  
-  def post_reply(p_url, message)
-    url = URI.parse(p_url)
-    
-    res = Net::HTTP.start(url.host, url.port) {|http|
-        req = Net::HTTP::Post.new(url.path)
-        
-        # TODO Add mapping from authenticated user to the flickr cookie
-        req.add_field 'Cookie', 'cookie_session=826357%3Abffa143d1bd9a6fc331ae661597293dd'
-        req.add_field 'Referer', url.to_s
-        req.add_field 'Content-Type', 'application/x-www-form-urlencoded'
-        req.set_form_data({'message'=> message, 'done'=>'1'})
-        http.request(req)
-    }
-    
-    res.code == 302
-  end
-  
-  # Posting a new topic:
-  # 1. Retrieve http://www.flickr.com/groups_newtopic.gne?id=13858278@N00
-  # 2. Extract magic cookie value
-  # 3. Post to http://www.flickr.com/groups_newtopic.gne with
-  #   name="magic_cookie" value="e16cf3ed0c05d2e497ab7d7335831a6b"
-  #   name="id" value="13858278@N00"
-  #   name="done" value="1"
-  #   name="subject" value="..."
-  #   name="message" value="..."
-  def post_new(p_url, message)
-    
-  end
-  
-  def flickr_login
-    agent = WWW::Mechanize.new
-    page  = agent.get('http://www.flickr.com/signin/')
-    page.forms.each{|form|
-      if form.name == 'login_form'
-        form.login = @user # "SteffenUhlig2004"
-        form.passwd = @password # "PhSl(13)"
-        page  = agent.submit(form)
-    
-        # execute manual redirect
-        page = page.links.first.click
-    
-        # Check for being logged on
-        
-      end
-    }        
   end
 end
