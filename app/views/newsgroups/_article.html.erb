@@ -1,0 +1,15 @@
+<tr>
+	<td>
+	  <%=h article.date %>
+	</td>
+	
+	<td>
+	  <%=h article.from %>
+	</td>
+	
+	<td>
+	  <%=h "*" * level %>
+	  <%=h article.subject %>
+	</td>
+</tr>
+<%= render(:partial => "article", :collection => article.children, :locals => {:level => level += 1 }) %>

@@ -1,0 +1,2 @@
+module NewsgroupsHelper
+end

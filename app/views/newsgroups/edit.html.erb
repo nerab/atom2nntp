@@ -1,0 +1,36 @@
+<h1>Editing newsgroup</h1>
+
+<% form_for(@newsgroup) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :alternate_link %><br />
+    <%= f.text_field :alternate_link %>
+  </p>
+  <p>
+    <%= f.label :icon_url %><br />
+    <%= f.text_field :icon_url %>
+  </p>
+  <p>
+    <%= f.label :subtitle %><br />
+    <%= f.text_area :subtitle %>
+  </p>
+  <p>
+    <%= f.label :updated %><br />
+    <%= f.date_select :updated %>
+  </p>
+  <p>
+    <%= f.label :generator %><br />
+    <%= f.text_field :generator %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @newsgroup %> |
+<%= link_to 'Back', newsgroups_path %>
