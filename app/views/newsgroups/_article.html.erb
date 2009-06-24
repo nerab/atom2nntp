@@ -9,7 +9,10 @@
 	
 	<td>
 	  <%=h "*" * level %>
-	  <%=h article.subject %>
+          <!--	  
+            <%=h article.subject %>
+          -->
+	 <%= link_to article.subject, article_path(article) %> 
 	</td>
 </tr>
 <%= render(:partial => "article", :collection => article.children, :locals => {:level => level += 1 }) %>
