@@ -10,10 +10,7 @@ class NewsgroupFetcher < Fetcher
       newsgroup.feed_url = url
       newsgroup.title          = Newsgroup.canonical_group_name(self.text(atom, "//feed/title"))
       newsgroup.subtitle       = self.text(atom, "//feed/subtitle")
-      
-      # TODO Does not work yet. Maybe REXML has a different way of coping with XPath?
-      newsgroup.alternate_link = XPath.first(atom, "//feed/link[@rel='alternate']/@href")
-      
+      newsgroup.alternate_link = XPath.first(atom, "//feed/link[@rel='alternate']/@href").value
       newsgroup.icon_url       = self.text(atom, "//feed/icon")
       newsgroup.updated        = self.text(atom, "//feed/updated")
       newsgroup.generator      = self.text(atom, "//feed/generator")    

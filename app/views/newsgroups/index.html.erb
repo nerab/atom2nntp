@@ -5,9 +5,7 @@
     <th>Title</th>
     <th>Alternate link</th>
     <th>Icon</th>
-<!--	
     <th>Subtitle</th>
--->
     <th>Updated</th>
     <th>Generator</th>
   </tr>
@@ -17,9 +15,7 @@
     <td><%=h newsgroup.title %></td>
     <td><%=h newsgroup.alternate_link %></td>
     <td><%= image_tag newsgroup.icon_url %></td>
-<!--	
     <td><%= newsgroup.subtitle%></td>
--->
     <td><%=h newsgroup.updated %></td>
     <td><%=h newsgroup.generator %></td>
     <td><%= link_to 'Show', newsgroup %></td>
