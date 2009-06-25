@@ -4,13 +4,20 @@
 </p>
 
 <p><b>Stats</b><br />
-<%= @newsgroup.articles.size %> articles since <%= @newsgroup.articles.find(:first, :order => "date ASC").date %><br />
+<%= @newsgroup.articles.size %> articles 
+<% 
+earliest = @newsgroup.articles.find(:first, :order => "date ASC")
+if earliest
+%>
+since <%= earliest.date %><br />
 <%=h(@grouped_by_from.size)%> distinct authors<br />
 </p>
 
 <p><b>Top 5 Authors</b><br />
 <img src="http://chart.apis.google.com/chart?cht=bvg&chs=300x100&chd=t:<%=@top_authors.collect{|a| (a.a_count.to_f / @max_per_author.to_f * 100).to_i}.join(',')%>&chdl=<%=@top_authors.collect{|a| CGI::escape(a.from) << ' (' << a.a_count << ')'}.join('|')%>&chco=FF0084|4096EE|FF7400|006E2E|CC0000"/>
 </p>
+
+<% end %>
 
 <p>
   <b>Alternate link:</b>

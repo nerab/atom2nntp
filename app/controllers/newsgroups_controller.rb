@@ -17,7 +17,7 @@ class NewsgroupsController < ApplicationController
     @grouped_by_from = @newsgroup.articles.group_by(&:from).sort{|x, y| x.size <=> y.size}
     @top_authors = Article.find_by_sql("select *, count(id) as a_count from articles where newsgroup_id = " <<  @newsgroup.id.to_s << " group by \"from\" order by a_count desc LIMIT 5")
     @top_authors.reject!{|a| a.from == "unknown"}
-    @max_per_author = @top_authors.max{|a,b| a.a_count <=> b.a_count}.a_count.to_i
+    @max_per_author = @top_authors.max{|a,b| a.a_count <=> b.a_count}.a_count.to_i if !@top_authors.empty?
     
     respond_to do |format|
       format.html # show.html.erb
