@@ -15,7 +15,7 @@ class Article < ActiveRecord::Base
                                             :parent_id => nil, 
                                             :message_id => a.references, 
                                             :from => "unknown",
-                                            :body => "<p>Synthetic parent. For the original, see <a href='#{lp.thread_url}'>#{lp.thread_url}</a><p>",
+                                            :body => "<p>Synthetic parent. For the original, see <a href='#{lp.thread_url}'>#{lp.thread_url}</a></p>",
                                             :link => lp.thread_url,
                                             :date => a.date.beginning_of_day)
     end
