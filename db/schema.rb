@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090626091429) do
+ActiveRecord::Schema.define(:version => 20090626144009) do
 
   create_table "articles", :force => true do |t|
     t.string   "link"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(:version => 20090626091429) do
     t.datetime "date"
     t.integer  "parent_id"
     t.string   "boundary"
+    t.string   "plaintext_body"
   end
 
   create_table "bdrb_job_queues", :force => true do |t|

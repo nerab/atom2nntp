@@ -1,3 +1,5 @@
+require "html2text"
+
 class Article < ActiveRecord::Base
   belongs_to :newsgroup
   validates_uniqueness_of(:message_id)
@@ -13,15 +15,15 @@ class Article < ActiveRecord::Base
                                             :parent_id => nil, 
                                             :message_id => a.references, 
                                             :from => "unknown",
-                                            :body => "Synthetic parent. For the original, see <a href='#{lp.thread_url}'>#{lp.thread_url}</a>",
+                                            :body => "<p>Synthetic parent. For the original, see <a href='#{lp.thread_url}'>#{lp.thread_url}</a><p>",
                                             :link => lp.thread_url,
                                             :date => a.date.beginning_of_day)
     end
     a.parent = parent
     
     # multipart boundary
-    boundary = "Multipart_#{DateTime.now.to_s(:number)}_#{id}" # should be reasonably unique
-    
+    a.boundary = "Multipart_#{DateTime.now.to_s(:number)}_#{a.id}" # should be reasonably unique
+    a.plaintext_body = HTML2Text.text(a.body)    
     a.save!
   }
   
@@ -45,18 +47,18 @@ class Article < ActiveRecord::Base
       article << "This is a multipart message." << "\r\n" # preamble
       article << "\r\n"
       
-      # plaintext part
-      article << "--#{boundary}" << "\r\n"
-      article << "Content-Type: text/plain; charset=utf-8" << "\r\n"
-      article << "\r\n"
-      article << "no plaintext version available yet" << "\r\n"
-      article << "\r\n"
-      
       # html part
       article << "--#{boundary}" << "\r\n"
       article << "Content-Type: text/html; charset=utf-8" << "\r\n"
       article << "\r\n"
       article << body.to_s << "\r\n"
+      article << "\r\n"
+      
+      # plaintext part
+      article << "--#{boundary}" << "\r\n"
+      article << "Content-Type: text/plain; charset=utf-8" << "\r\n"
+      article << "\r\n"
+      article << plaintext_body << "\r\n"
       article << "\r\n"
       
       # finishing
