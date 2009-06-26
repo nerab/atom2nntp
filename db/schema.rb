@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090624163849) do
+ActiveRecord::Schema.define(:version => 20090626091429) do
 
   create_table "articles", :force => true do |t|
     t.string   "link"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(:version => 20090624163849) do
     t.integer  "newsgroup_id"
     t.datetime "date"
     t.integer  "parent_id"
+    t.string   "boundary"
   end
 
   create_table "bdrb_job_queues", :force => true do |t|

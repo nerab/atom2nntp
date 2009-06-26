@@ -32,6 +32,13 @@ class NntpSession
             send_line(group.metadata, true)
           }
           send_line(".")
+
+        when /^LIST NEWSGROUPS$/i
+          send_line("215 information follows", true)
+          Newsgroup.all.each{|group|
+            send_line("#{group.title} #{group.alternate_link}", true)
+          }
+          send_line(".")
         
         when /^XOVER(\s+\d+)?(-)?(\d+)?$/i
           if @group.nil?
@@ -54,6 +61,22 @@ class NntpSession
               send_line('.')
             end
           end
+
+      # new
+      when /^NEWNEWS\s+(.*)\s+(\d{6})\s+(\d{6})(\s+GMT)?\s+(<.+>)?$/i
+        groups = $1.split(/\s*,\s*/)
+        time = read_time($2, $3, $4)
+        distribs = ( $5 ? $5.strip.delete('<> ').split(/,/) : nil )
+        log("client asking for groups = #{}, time = #{}, distribs = #{}")
+        
+        send_line('503 program error, function not yet implemented', true)
+        #send_line( "230 list of new articles by message-id follows", true)
+        #@storage.each_article do |article|
+        #  if article.existed_at?(time) and article.matches_groups?(groups) and @storage.groups_of(article).any? { |g| g.matches_distribs?(distribs) }
+        #    putline article.mid.sub(/^\./, '..')
+        #  end
+        #end
+        send_line('.')
 
         when /^(ARTICLE|HEAD|BODY|STAT)\s+<(.*)>$/i
           article = Article.find_by_message_id($2)

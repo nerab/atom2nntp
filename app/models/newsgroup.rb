@@ -11,7 +11,7 @@ class Newsgroup < ActiveRecord::Base
   def metadata
     first = articles.first(:order => 'id')
     last = articles.last(:order => 'id')
-    return "#{title} #{last ? last.id : 0} #{first ? first.id : 0} y"
+    return "#{title} #{last ? last.id : 0} #{first ? first.id : 0} n"
   end
   
   # Returns an estimation of the number of articles in this newsgroup.

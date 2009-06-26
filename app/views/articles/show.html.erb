@@ -1,31 +1,42 @@
 <%
-unless nil == @article.next
-  @page_shortcuts = {
-    :n => "document.location = '#{article_path(@article.next)}';"
-}
+@page_shortcuts = {}
+@page_shortcuts[:p] = "document.location = '#{article_path(@article.previous)}';" unless nil == @article.previous
+@page_shortcuts[:n] = "document.location = '#{article_path(@article.next)}';" unless nil == @article.next
+@page_shortcuts[:r] = "document.location = '#{article_path(@article.previous_thread)}';" unless nil == @article.previous_thread
+@page_shortcuts[:t] = "document.location = '#{article_path(@article.next_thread)}';" unless nil == @article.next_thread
 %>
-  <script type="text/javascript">
-    <%= render_shortcuts %>
-  </script>
-<%
-end
-%>
+<script type="text/javascript">
+  <%= render_shortcuts %>
+</script>
 
 <div class="message">
-<div class="headers">
-From: <%= h(@article.from) %><br>
-Subject: <%= link_to h(@article.subject), newsgroup_path(@article.newsgroup, :anchor => @article.id) %><br>
-Newsgroups: <%= link_to h(@article.newsgroup.title), newsgroup_path(@article.newsgroup, :anchor => 'articles') %><br>
-Date: <%= h(@article.date) %><br>
-<% unless @article.references.blank? %>
-References: <%= link_to h(@article.references), article_path(@article.references) %><br>
-<% end %>
-<% unless nil == @article.next %>
-Next: <%= link_to h(@article.next.subject), article_path(@article.next), :accesskey => 'n' %><br>
-<% end %>
-Original: <%= link_to "flickr", @article.link %><br>
+  <div class="headers">
+    From: <%= h(@article.from) %><br>
+    Subject: <%= link_to h(@article.subject), newsgroup_path(@article.newsgroup, :anchor => @article.id) %><br>
+    Newsgroups: <%= link_to h(@article.newsgroup.title), newsgroup_path(@article.newsgroup, :anchor => 'articles') %><br>
+    Date: <%= h(@article.date) %><br>
+    <% unless @article.references.blank? %>
+    References: <%= link_to h(@article.references), article_path(@article.references) %><br>
+    <% end %>
+    Original: <%= link_to @article.link, @article.link %><br>
+  </div>
+  <div class="body">
+    <%= @article.body %>
+  </div>
 </div>
-<div class="body">
-<%= @article.body %>
+
+<div class="nav">
+  <% unless nil == @article.previous %>
+    Previous: <%= link_to h(@article.previous.subject), article_path(@article.previous) %><br>
+  <% end %>
+  <% unless nil == @article.next %>
+    Next: <%= link_to h(@article.next.subject), article_path(@article.next) %><br>
+  <% end %>
+  <% unless nil == @article.previous_thread %>
+    Previous Thread: <%= link_to h(@article.previous_thread.subject), article_path(@article.previous_thread) %><br>
+  <% end %>
+  <% unless nil == @article.next_thread %>
+    Next Thread: <%= link_to h(@article.next_thread.subject), article_path(@article.next_thread) %><br>
+  <% end %>
 </div>
-</div>
+

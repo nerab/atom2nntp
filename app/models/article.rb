@@ -18,6 +18,10 @@ class Article < ActiveRecord::Base
                                             :date => a.date.beginning_of_day)
     end
     a.parent = parent
+    
+    # multipart boundary
+    boundary = "Multipart_#{DateTime.now.to_s(:number)}_#{id}" # should be reasonably unique
+    
     a.save!
   }
   
@@ -30,16 +34,36 @@ class Article < ActiveRecord::Base
       article << "Subject: #{subject}" << "\r\n"
       article << "References: #{references}" << "\r\n" if !references.nil?
       article << "MIME-Version: 1.0" << "\r\n"
-      article << "Content-Type: text/html; charset=UTF-8" << "\r\n"
+      article << "Content-Type: multipart/mixed; boundary=\"#{boundary}\"" << "\r\n"
       article << "Content-Transfer-Encoding: 8bit" << "\r\n"
-#      article << "Content-Base: #{link}" << "\r\n"
       article
   end
     
   def content
       article = head
       article << "\r\n"
-      article << body.to_s
+      article << "This is a multipart message." << "\r\n" # preamble
+      article << "\r\n"
+      
+      # plaintext part
+      article << "--#{boundary}" << "\r\n"
+      article << "Content-Type: text/plain; charset=utf-8" << "\r\n"
+      article << "\r\n"
+      article << "no plaintext version available yet" << "\r\n"
+      article << "\r\n"
+      
+      # html part
+      article << "--#{boundary}" << "\r\n"
+      article << "Content-Type: text/html; charset=utf-8" << "\r\n"
+      article << "\r\n"
+      article << body.to_s << "\r\n"
+      article << "\r\n"
+      
+      # finishing
+      article << "--#{boundary}--" << "\r\n"
+      article << "\r\n"
+      article << "End of message."  << "\r\n" # epilogue
+      article << "\r\n"
       article
   end
 
@@ -62,9 +86,20 @@ class Article < ActiveRecord::Base
     result
   end
   
-  # retrieves the next article within the thread. Assumes that ids are continuous
+  def previous
+  end
+  
+  # Retrieves the next article within the thread. Assumes that ids are continuous.
   def next
     self.root.children.reject{|sibling| sibling.date <= self.date}.sort{|a,b| a.date <=> b.date}.first
+  end
+ 
+  def previous_thread
+  end
+    
+  # Retrieves the first article in the next thread. Assumes that ids are continuous.
+  def next_thread
+    self.newsgroup.threads.reject{|sibling| sibling.date < self.date || sibling.id < self.id}.sort{|a,b| a.id <=> b.id}.first
   end
  
 private

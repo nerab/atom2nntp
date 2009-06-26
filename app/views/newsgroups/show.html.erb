@@ -1,7 +1,4 @@
-<p>
-  <b>Title:</b>
-  <%=h @newsgroup.title %>
-</p>
+<h1><%=h @newsgroup.title %></h1>
 
 <p><b>Stats</b><br />
 <%= @newsgroup.articles.size %> articles 
@@ -62,4 +59,4 @@ since <%= earliest.date %><br />
 </table>
 
 <%= link_to 'Edit', edit_newsgroup_path(@newsgroup) %> |
-<%= link_to 'Back', newsgroups_path %>
+<%= link_to 'Groups', newsgroups_path %>
