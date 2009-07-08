@@ -1,4 +1,7 @@
 * Make sure plugins are installed as git submodules, see http://woss.name/2008/04/09/using-git-submodules-to-track-vendorrails/
 * installation of packet together with ruby-enterprise does not update
     sudo ln -s /usr/local/ruby-enterprise/bin/packet_worker_runner /usr/local/bin/packet_worker_runner
+* Add a login system so that
+  1. only authorized user are going to use the site, and
+  2. The web interface remembers what has been read and what not
 * 
