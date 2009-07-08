@@ -10,8 +10,11 @@ role :web, "qa.uhcons.net"
 role :db,  "qa.uhcons.net", :primary => true
 
 set :scm, "git"
-set :repository,  "."
-set :deploy_via, :copy
+set :repository,  "git://github.com/nerab/atom2nntp.git"
+set :branch, "master"
+set :deploy_via, :remote_cache
+set :git_enable_submodules, 1
+# set :deploy_via, :copy
 
 namespace :passenger do
   desc <<-DESC
