@@ -31,3 +31,18 @@ end
 
 after :deploy, "passenger:restart"
 
+desc "Stop the backgroundrb server"
+task :stop_backgroundrb , :roles => :app do
+  run "cd #{current_path} && ./script/backgroundrb stop"
+end
+
+desc "Start the backgroundrb server" 
+task :start_backgroundrb , :roles => :app do
+  run "cd #{current_path} && nohup ./script/backgroundrb start -e production > #{current_path}/log/backgroundrb-cap.log 2>&1" 
+end
+
+desc "Restart the backgroundrb server"
+task :restart_backgroundrb, :roles => :app do
+  stop_backgroundrb
+  start_backgroundrb
+end
