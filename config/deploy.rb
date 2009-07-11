@@ -38,7 +38,7 @@ end
 
 desc "Start the backgroundrb server" 
 task :start_backgroundrb , :roles => :app do
-  run "cd #{current_path} && nohup ./script/backgroundrb start -e production > #{current_path}/log/backgroundrb-cap.log 2>&1" 
+  run "cd #{current_path} && nohup ./script/backgroundrb start" 
 end
 
 desc "Restart the backgroundrb server"
