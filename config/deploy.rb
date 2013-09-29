@@ -4,10 +4,10 @@ set :deploy_to, "/var/www/#{application}"
 default_run_options[:pty] = true
 set :use_sudo, true
 
-set :user, "suhlig"
-role :app, "qa.uhcons.net"
-role :web, "qa.uhcons.net"
-role :db,  "qa.uhcons.net", :primary => true
+set :user, "nerab"
+role :app, "qa.example.net"
+role :web, "qa.example.net"
+role :db,  "qa.example.net", :primary => true
 
 set :scm, "git"
 set :repository,  "git://github.com/nerab/atom2nntp.git"
